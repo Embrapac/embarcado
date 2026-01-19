@@ -3,7 +3,6 @@ Parte integrante do fluxo de trabalho do projeto final da residência do CPQD.
 
 ## Dispositivo em uso: 
 
-
 PIC32MK MCACURIOSITYPRODEVELOPMENTBOARD
 
 
@@ -17,5 +16,20 @@ PIC32MK MCACURIOSITYPRODEVELOPMENTBOARD
 | **Pinos dedicados ao sistema de controle de motores 2** | ![Lista da interface de controle de motores 2](https://github.com/Embrapac/embarcado/blob/main/images/6.lista_da_interface_de_controle_de_motores_2.png) |
 | **Pinos dedicados para as entradas do banco 1** | ![Pinos dedicados para as entradas do banco 1:](https://github.com/Embrapac/embarcado/blob/main/images/7.lista_de_pinos_entrada_1.png) |
 | **Pinos dedicados para as entradas do banco 2** | ![Pinos dedicados para as entradas do banco 2:](https://github.com/Embrapac/embarcado/blob/main/images/8.lista_de_pinos_entrada_2.png) |
+
+
+## Ferramenta necessária para desenvolvimento no PIC: 
+https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide
+
+### Passos para o desenvolvimento:
+
+#### 1º - Acessar a aba File, no canto superior esquerdo;
+#### 2º - Haverão dois campos principais: Categories e Projects, no primeiro escolha "Microchip Embedded", e no segundo selecione "Application Project(s)";
+#### 3º - Após isso, selecione o botão "next" no canto inferior deste sub-menu;
+#### 4º - Em Family, selecione a opção que for melhor para a sua aplicação, em nosso caso estamos utilizando um PIC 32 MK, portanto selecionaremos a opção "32-BIT MCUs (PIC32)";
+
+#### 5º - Em device iremos escolher o dispositivo em uso que aqui será o 
+
+#### 6º - 
 
 ---
