@@ -2,11 +2,15 @@
 Parte integrante do fluxo de trabalho do projeto final da residência do CPQD.
 
 ## Dispositivo em uso: 
-###### PIC32MK MCACURIOSITYPRODEVELOPMENTBOARD
 
-![Vista baixa da PCB:](https://github.com/Embrapac/embarcado/blob/main/images/1.pic_pcb_view.jpeg)
 
-![Divisão interna de blocos do CI:](https://github.com/Embrapac/embarcado/blob/main/images/2.representacao_de_topo.png)
+PIC32MK MCACURIOSITYPRODEVELOPMENTBOARD
+
+
+| **Itens** | **Desenvoltura** |
+| :--- | :--- |
+| **Vista baixa da PCB** | ![Vista baixa da PCB:](https://github.com/Embrapac/embarcado/blob/main/images/1.pic_pcb_view.jpeg) |
+| **Divisão interna de blocos do CI** | ![Divisão interna de blocos do CI:](https://github.com/Embrapac/embarcado/blob/main/images/2.representacao_de_topo.png) |
 
 ![Interface dedicada Arduino:](https://github.com/Embrapac/embarcado/blob/main/images/3.interface_arduino.png)
 
