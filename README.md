@@ -45,21 +45,52 @@ https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide
 
 O que é um circuito Blink? Um circuito de teste simples, onde é alocado um led de uma cor qualquer, habitualmente o vermelho, de modo que o mesmo, alterne entre os estados ligado/desligado, a cada ciclo de tempo pré-determinado, em ambos os casos, usaremos um ciclo de 1s para cada comutação.
 
-Além disso, é necessário utilizar um resistor para controle do potencial que alimenta o LED, este dispositivo pode ser dimensionado através desta fórmula
+Além disso, é necessário utilizar um resistor para controle do potencial que alimenta o LED, este dispositivo pode ser dimensionado através desta fórmula:
 
-                                (Vpp - V*led)
-                          R(Ω)  --------------------
-                                    I*led*
-
-
-## Cálculo do resistor para o LED
+## Cálculo do resistor para o LED:
 
 $$
-R(\Omega) = \frac{V_{pp} - V_{LED}}{I_{LED}}
+R(\Omega) = \frac{V_{pp} - V_{led}}{I_{led}}
 $$
 
+Para isso será necessário utilizar um pino que tenha capacidade produzir um sinal digital, para cada tomando o cuidado de não usar pinos reservados, para o Arduino será utilizado o pino D3.
 
-utilizar um pino que tenha capacidade produzir uma tensão , portant
+No Arduino:
+```bash
+void setup() {
+    // define o pino D3 como saída
+    pinMode(D3, OUTPUT);
+}
 
+void loop() {
+    // liga o LED:
+    digitalWrite(D3, HIGH); 
+    // espera 1 segundo:
+    delay(1000);          
+    // desliga o LED:  
+    digitalWrite(D3, LOW); 
+    // espera 1 segundo: 
+    delay(1000);            
+}
+```
+No PIC32:
 
----
+```bash
+#include <xc.h>
+
+int main(void)
+{
+    // Configura RA0 como saída
+    TRISAbits.TRISA10 = 0;
+
+    while (1)
+    {
+        // liga LED externo
+        LATAbits.LATA0 = 1;  
+        for (volatile int i = 0; i < 500000; i++);
+        
+        // desliga LED externo
+        LATAbits.LATE0 = 0;  
+        for (volatile int i = 0; i < 500000; i++);
+    }
+}
