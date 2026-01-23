@@ -54,9 +54,9 @@ Além disso, é necessário utilizar um resistor para controle do potencial que 
 
 ## Cálculo do resistor para o LED
 
-\[
-\boxed{R(\Omega)=\dfrac{V_{pp} - V_{LED}}{I_{LED}}}
-\]
+$$
+R(\Omega) = \frac{V_{pp} - V_{LED}}{I_{LED}}
+$$
 
 
 utilizar um pino que tenha capacidade produzir uma tensão , portant
