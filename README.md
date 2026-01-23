@@ -23,31 +23,25 @@ https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide
 
 ### Passos para o desenvolvimento:
 
-```
-> 1º - Acessar a aba File, no canto superior esquerdo;
-```
-```
-> 2º - Haverão dois campos principais: Categories e Projects, no primeiro escolha "Microchip Embedded", e no segundo selecione "Application Project(s)";
-```
-```
-> 3º - Após isso, selecione o botão "next" no canto inferior deste sub-menu;
-```
-```
-> 4º - Em Family, selecione a opção que for melhor para a sua aplicação, em nosso caso estamos utilizando um PIC 32 MK, portanto selecionaremos a opção "32-BIT MCUs (PIC32)";
-```
-```
-> 5º - Em device iremos escolher o dispositivo em uso que aqui será o PIC32MK0128MCA028
-```
-```
-> 6º - Em tool há diversas opções de feramentas, selecionaremos o simulator pois não estamos com o hardware em bancada.
-```
-```
-> 7º - Após isso, dê um next, e selecione o compilador, que será o XC32.
-```
-```
-> 8º - Em Project name colocaremos, "embrapac", e o caminho defini o mesmo que minha branch local, neste caso foi "/home/matheus/Área de trabalho/projeto/embarcado".
-```
-```
-> 9º - Após a execução da estrutura de pastas internas geradas pelo programa, foi criada uma pasta com o nome de "embrapac.X" que irá armazenar os dados de projeto.
-```
+
+1. Acesse a aba **File**, no canto superior esquerdo.
+2. Em seguida aparecerão dois campos principais: **Categories** e **Projects**.  
+   - Em *Categories*, escolha **Microchip Embedded**.  
+   - Em *Projects*, selecione **Application Project(s)**.
+3. Clique em **Next** no canto inferior do sub-menu.
+4. Em **Family**, escolha a família correspondente ao seu dispositivo.  
+   No nosso caso: **32-BIT MCUs (PIC32)**.
+5. Em **Device**, selecione **PIC32MK0128MCA028**.
+6. Em **Tool**, escolha **Simulator**, pois não estamos usando o hardware físico.
+7. Clique em **Next** e selecione o compilador **XC32**.
+8. Em **Project Name**, use **embrapac**.  
+   No campo de localização do projeto, use o diretório onde clonou, em nosso caso:  
+   ```
+   /home/matheus/Área de trabalho/projeto/embarcado
+   ```
+9. Após finalizar, o programa criará a pasta **embrapac.X**, onde ficarão todos os arquivos do projeto.
+
+
+
+
 ---
