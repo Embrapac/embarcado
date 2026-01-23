@@ -41,7 +41,25 @@ https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide
    ```
 9. Após finalizar, o programa criará a pasta **embrapac.X**, onde ficarão todos os arquivos do projeto.
 
+## Comparativo simples de um circuito blink no Arduino vs PIC:
 
+O que é um circuito Blink? Um circuito de teste simples, onde é alocado um led de uma cor qualquer, habitualmente o vermelho, de modo que o mesmo, alterne entre os estados ligado/desligado, a cada ciclo de tempo pré-determinado, em ambos os casos, usaremos um ciclo de 1s para cada comutação.
+
+Além disso, é necessário utilizar um resistor para controle do potencial que alimenta o LED, este dispositivo pode ser dimensionado através desta fórmula
+
+                                (Vpp - V*led)
+                          R(Ω)  --------------------
+                                    I*led*
+
+
+## Cálculo do resistor para o LED
+
+\[
+\boxed{R(\Omega)=\dfrac{V_{pp} - V_{LED}}{I_{LED}}}
+\]
+
+
+utilizar um pino que tenha capacidade produzir uma tensão , portant
 
 
 ---
