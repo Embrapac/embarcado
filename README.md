@@ -48,12 +48,69 @@ O que é um circuito Blink? Um circuito de teste simples, onde é alocado um led
 Além disso, é necessário utilizar um resistor para controle do potencial que alimenta o LED, este dispositivo pode ser dimensionado através desta fórmula:
 
 ## Cálculo do resistor para o LED:
+<br>
 
 $$
 R(\Omega) = \frac{V_{pp} - V_{led}}{I_{led}}
+$$ 
+
+<br>
+
+$$
+P(W) = U*i
 $$
 
-Para isso será necessário utilizar um pino que tenha capacidade produzir um sinal digital, para cada tomando o cuidado de não usar pinos reservados, para o Arduino será utilizado o pino D3.
+<br>
+O led em carga plena utiliza 1.8~2V, afim de cálculo, considerarei 1.9V, e sua corrente é de 20mA (0.02A)
+
+### Para o Arduino a tensão de trabalho é de 5V:
+
+<br>
+
+$$
+R(\Omega) = \frac{5 - 1.9}{0.02} = \frac{3.1}{0.02} = 155\Omega
+$$
+
+<br>
+
+$$
+P(W) = U*i = 3.1 * 0.02 = 0.062W
+$$
+
+<br>
+Não existe resistor comercial com essa medida, porém usaremos o de 160, que é um valor próximo, para essa potência o valor minimo é um de 1/8W (0.125W)
+
+<br>
+
+### Para o PIC32 a tensão de trabalho é de 3.3V
+
+<br>
+
+$$
+R(\Omega) = \frac{3.3 - 1.9}{0.02} = \frac{1.4}{0.02} = 70\Omega
+$$
+
+<br>
+
+$$
+P(W) = U*i = 1.4 * 0.02 = 0.028W
+$$
+
+<br>
+
+Não existe resistor comercial com essa medida, porém usaremos o de 75, que é um valor próximo, para essa potência o valor minimo é um de 1/16W (0.0625W)
+
+---
+
+Para essa aplicação será necessário utilizar um pino que tenha capacidade produzir um sinal digital, para cada tomando o cuidado de não usar pinos reservados.
+
+Para o Arduino será utilizado o pino D3.
+
+e
+
+
+# PAREI AQUI, DAQUI PRA BAIXO ESTÁ EM ELABORAÇÃO
+Para o PIC será utilizado o pino RA10.
 
 No Arduino:
 ```bash
@@ -65,32 +122,103 @@ void setup() {
 void loop() {
     // liga o LED:
     digitalWrite(D3, HIGH); 
+
     // espera 1 segundo:
-    delay(1000);          
+    delay(1000);   
+
     // desliga o LED:  
     digitalWrite(D3, LOW); 
+
     // espera 1 segundo: 
     delay(1000);            
 }
 ```
+
 No PIC32:
+<br>
+Aqui a situação é um pouquinho mais complexa e iremos detalhar abaixo:
+
+Da forma que o Arduino trabalha seus cálculos são feitos por algoritmos internos de calibração de clock, o que infere que os sistemas não sejam tão precisos, no PIC conseguimos quantificar os ciclos de máquina manualmente, o que garante uma precisão milimétrica do sistema, para isso precisamos definir as constantes de nosso sistema, de acordo com o datasheet do fabricante o sistema é alimenato pelo cristal de clock Y300 MCHP CLOCK OSCILLATOR SINGLE 12MHz, partindo disso, para definir esse clock usaremos esse conjunto de instruções:
+
+```
+include <xc.h>
+#include <sys/attribs.h>
+
+// CONFIGURAÇÃO DO CLOCK PARA CRISTAL DE 12MHz
+// Oscilador: System PLL
+#pragma config FNOSC = SPLL       
+
+// Cristal Externo de Alta Velocidade
+#pragma config POSCMOD = HS      
+
+// PLL usa o Oscilador Primário (Cristal) 
+#pragma config FPLLICLK = POSC  
+
+// Cria uma parametro para simplificar o processo de chamada de clock:
+#define SYS_FREQ 120000000L
+```
+Caso deseje habilitar o cão de guarda do PIC definir como ON:
+```
+#pragma config FWDTEN = OFF       // Watchdog desligado
+```
+
+Nas definições inicias de pinos temos mais parametros a definir que no Arduino, o que nos fornece mais controle da operação:
+
+```bash
+// Configurar Pino RB14 para uso no LED:
+
+void init_gpio(void)
+{    
+    // RB7 como saída
+    TRISBbits.TRISB14 = 0;   
+
+    // LED inicialmente desligado
+    LATBbits.LATB14 = 0;     
+}
+```
+
+Para simplificar a chamada de delay vamos criar uma função auxiliar:
+```bash
+void delay_ms(unsigned int ms)
+{
+    // Timer1 roda no PBCLK (ex.: 80 MHz)
+    T1CON = 0;           // Para Timer1
+    T1CONbits.TCKPS = 3; // Prescaler 1:256
+
+    // PBCLK = 12 MHz → T1 tick = 12MHz/256 = 312.500 Hz
+    // 1 ms = 312.5 contagens
+    PR1 = 312;           // ~1 ms
+    T1CONbits.ON = 1;
+
+    for (unsigned int i = 0; i < ms; i++)
+    {
+        TMR1 = 0;
+        while (!IFS0bits.T1IF); // Espera overflow
+        IFS0bits.T1IF = 0;      // Limpa flag
+    }
+}
+```
+
+
 
 ```bash
 #include <xc.h>
 
+
 int main(void)
 {
-    // Configura RA0 como saída
+    // define o pino RA0 como saída
     TRISAbits.TRISA10 = 0;
 
     while (1)
     {
-        // liga LED externo
+        // liga o LED:
         LATAbits.LATA0 = 1;  
         for (volatile int i = 0; i < 500000; i++);
         
-        // desliga LED externo
+        // desliga o LED:
         LATAbits.LATE0 = 0;  
         for (volatile int i = 0; i < 500000; i++);
     }
 }
+
