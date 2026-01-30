@@ -1,0 +1,26 @@
+name: sync to rt-embarcados ORG
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # necessário para histórico completo
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.RT_EMBARCADOS_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - name: push to rt-embarcados
+        run: |
+          git remote add rt-embarcados git@github.com:rt-embarcados/grp1_repo.git
+          git fetch rt-embarcados
+          git push rt-embarcados develop:embarcado --force-with-lease
