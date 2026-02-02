@@ -41,14 +41,24 @@ https://www.microchip.com/en-us/tools-resources/develop/mplab-x-ide
    ```
 9. Após finalizar, o programa criará a pasta **embrapac.X**, onde ficarão todos os arquivos do projeto.
 
-## Comparativo simples de um circuito blink no Arduino vs PIC:
-
+## 2. Comparativo simples de um circuito blink no Arduino vs PIC:
+<div align="justify">
 O que é um circuito Blink? Um circuito de teste simples, onde é alocado um led de uma cor qualquer, habitualmente o vermelho, de modo que o mesmo, alterne entre os estados ligado/desligado, a cada ciclo de tempo pré-determinado, em ambos os casos, usaremos um ciclo de 1s para cada comutação.
 
 Além disso, é necessário utilizar um resistor para controle do potencial que alimenta o LED, este dispositivo pode ser dimensionado através desta fórmula:
 
-## Cálculo do resistor para o LED:
+Para essa aplicação será necessário utilizar um pino que tenha capacidade produzir um sinal digital, tomando o cuidado de não usar pinos reservados, no Arduino será o usado o pino D3, e no PIC será usado o RA10.
+
+---
+
+#### 2.1 Cálculo do resistor para os LED:
+
+<div align="justify">
+Serão utilizados dois leds neste contexto, o amarelo que simula uma iluminação de área externa controlado pelo relé, enquanto o led vermelho representa a luz de alerta, acionada diretamente pelo gpio, as fórmulas abaixo representam o modo de cálculo para dimensionamento:
+
 <br>
+<br>
+2.1.1. Resistência mínima segura:
 
 $$
 R(\Omega) = \frac{V_{pp} - V_{led}}{I_{led}}
@@ -56,148 +66,180 @@ $$
 
 <br>
 
+
+2.1.2. Dissipação no resistor:
+
 $$
 P(W) = U*i
 $$
 
+2.1.3. Potência mínima do resistor:
 <br>
-O led em carga plena utiliza 1.8~2V, afim de cálculo, considerarei 1.9V, e sua corrente é de 20mA (0.02A)
-
-### Para o Arduino a tensão de trabalho é de 5V:
-
+*Fs é um fator de segurança, idealmente adoto 50%*
 <br>
 
 $$
-R(\Omega) = \frac{5 - 1.9}{0.02} = \frac{3.1}{0.02} = 155\Omega
+Pmin = P(W) * (1+Fs)
 $$
-
 <br>
-
-$$
-P(W) = U*i = 3.1 * 0.02 = 0.062W
-$$
-
 <br>
-Não existe resistor comercial com essa medida, porém usaremos o de 160, que é um valor próximo, para essa potência o valor minimo é um de 1/8W (0.125W)
-
-<br>
-
-### Para o PIC32 a tensão de trabalho é de 3.3V
-
-<br>
-
-$$
-R(\Omega) = \frac{3.3 - 1.9}{0.02} = \frac{1.4}{0.02} = 70\Omega
-$$
-
-<br>
-
-$$
-P(W) = U*i = 1.4 * 0.02 = 0.028W
-$$
-
-<br>
-
-Não existe resistor comercial com essa medida, porém usaremos o de 75, que é um valor próximo, para essa potência o valor minimo é um de 1/16W (0.0625W)
 
 ---
 
-Para essa aplicação será necessário utilizar um pino que tenha capacidade produzir um sinal digital, para cada tomando o cuidado de não usar pinos reservados.
+<div align="center">
 
-Para o Arduino será utilizado o pino D3.
+| **Tabela de caracteristicas técnicas dos LEDs** |
+| :---: |
+![tabela_led](https://github.com/MattGrossi12/fiap_embedded_projects_2/blob/main/images/tabela_led.png)
+| **Tabela de resistores comerciais** |
+![tabela_resistores](https://github.com/MattGrossi12/fiap_embedded_projects_2/blob/main/images/tabela_resistores.png)
+| **Diagrama de potências de resistores comerciais** |
+![tabela_resistores](https://github.com/MattGrossi12/fiap_embedded_projects_2/blob/main/images/pot_resistores.png)
 
-e
+<br>
+
+<div align="justify">
+
+### 2.2 Dimensionamento dos resistores para os LEDs:
+
+### 2.2.1 Para o Arduino:
+
+Neste a tensão de trabalho do GPIO é de 5V.
+
+Este em carga carga plena utiliza 1.7V, e sua corrente é de 10mA (0.01A).
 
 
-# PAREI AQUI, DAQUI PRA BAIXO ESTÁ EM ELABORAÇÃO
-Para o PIC será utilizado o pino RA10.
 
-No Arduino:
+<br>
+
+$$
+R(\Omega) = \frac{5 - 1.7}{0.01} = \frac{3.3}{0.01} = 330\Omega
+$$
+
+<br>
+
+$$
+P(W) = U*i = 3.3 * 0.01 = 0.033W
+$$
+
+<br>
+
+$$
+Pmin = U*i = 0.033W * (1+0.50)=0.0495W
+$$
+<br>
+
+<br>
+Usaremos um resistor comercial de 330R, e para essa potência o valor minimo arredonando para cima será um de 1/16W (0.0625W).
+
+<br>
+
+### 2.2.2 Para o PIC32:
+
+Neste a tensão de trabalho do GPIO é de 3.3V.
+
+Este em carga carga plena utiliza 1.7V, e sua corrente é de 10mA (0.01A).
+
+
+
+<br>
+
+$$
+R(\Omega) = \frac{3.3 - 1.7}{0.01} = \frac{1.6}{0.01} = 160\Omega
+$$
+
+<br>
+
+$$
+P(W) = U*i = 1.6 * 0.01 = 0.016W
+$$
+
+<br>
+
+$$
+Pmin = U*i = 0.016W * (1+0.50)=0.024W
+$$
+<br>
+
+<br>
+Usaremos um resistor comercial de 160R, e para essa potência o valor minimo arredonando para cima será um de 1/16W (0.0625W).
+
+---
+## 2.3 Arquitetura dos firmwares
+### 2.3.1 Para o Arduino:
+
+No ambiente do arduino os clocks já são previamente configuardos a nível de firmware da bios do SoC, fazendo com que o usuário não necesiste se preocupar com essas questões, restando assim duas funções básicas a programar, o "setup" que é chamada apenas uma vez e especificamente no ato da inicialização, como pode ser visto abaixo:
+
 ```bash
 void setup() {
     // define o pino D3 como saída
     pinMode(D3, OUTPUT);
 }
+```
 
+Ea 2º função mínima obrigatória é a de "loop", o qual após setup assume o comando e é repetida infinitamente, como pode ser vista abaixo:
+
+
+```bash
 void loop() {
     // liga o LED:
-    digitalWrite(D3, HIGH); 
+    digitalWrite(D3, 1); 
 
     // espera 1 segundo:
     delay(1000);   
 
     // desliga o LED:  
-    digitalWrite(D3, LOW); 
+    digitalWrite(D3, 0); 
 
     // espera 1 segundo: 
     delay(1000);            
 }
 ```
 
-No PIC32:
+### 2.3.2 No PIC32:
 <br>
 Aqui a situação é um pouquinho mais complexa e iremos detalhar abaixo:
 
 Da forma que o Arduino trabalha seus cálculos são feitos por algoritmos internos de calibração de clock, o que infere que os sistemas não sejam tão precisos, no PIC conseguimos quantificar os ciclos de máquina manualmente, o que garante uma precisão milimétrica do sistema, para isso precisamos definir as constantes de nosso sistema, de acordo com o datasheet do fabricante o sistema é alimenato pelo cristal de clock Y300 MCHP CLOCK OSCILLATOR SINGLE 12MHz, partindo disso, para definir esse clock usaremos esse conjunto de instruções:
 
-```
-include <xc.h>
-#include <sys/attribs.h>
-
-// CONFIGURAÇÃO DO CLOCK PARA CRISTAL DE 12MHz
-// Oscilador: System PLL
-#pragma config FNOSC = SPLL       
-
-// Cristal Externo de Alta Velocidade
-#pragma config POSCMOD = HS      
-
-// PLL usa o Oscilador Primário (Cristal) 
-#pragma config FPLLICLK = POSC  
-
-// Cria uma parametro para simplificar o processo de chamada de clock:
-#define SYS_FREQ 120000000L
-```
-Caso deseje habilitar o cão de guarda do PIC definir como ON:
-```
-#pragma config FWDTEN = OFF       // Watchdog desligado
-```
-
-Nas definições inicias de pinos temos mais parametros a definir que no Arduino, o que nos fornece mais controle da operação:
-
 ```bash
-// Configurar Pino RB14 para uso no LED:
+//Includes:
+#include <xc.h>
 
-void init_gpio(void)
-{    
-    // RB7 como saída
-    TRISBbits.TRISB14 = 0;   
+//Definições Pragma (Instruções passadas ao compilador):
+//--------------------------------------------------------
+// Liga/desliga o sistema de cão de guarda de temporização do MCU
+#pragma config FWDTEN   = OFF    // Turn off watchdog timer
 
-    // LED inicialmente desligado
-    LATBbits.LATB14 = 0;     
-}
+//Habilita o uso 
+// Desabilita o debugger em background
+#pragma config DEBUG    = OFF         
+
+// Desabilita a interface JTAG
+#pragma config JTAGEN   = OFF         
+
+// Seleciona canal de comunicação ICD/ICE PGx1
+#pragma config ICESEL   = ICS_PGx1    
+
+// Desabilita o módulo de rastreamento Trace
+#pragma config TRCEN    = OFF         
+
+// Boot em ISA MIPS32
+#pragma config BOOTISA  = MIPS32      
+
+// ECC de flash desabilitado
+#pragma config FECCCON  = OFF_UNLOCKED 
+
+// Flash não entra em modo sleep
+#pragma config FSLEEP   = OFF         
+
+// Permite acesso de debug a todos os periféricos
+#pragma config DBGPER   = PG_ALL      
+
+
 ```
 
-Para simplificar a chamada de delay vamos criar uma função auxiliar:
-```bash
-void delay_ms(unsigned int ms)
-{
-    // Timer1 roda no PBCLK (ex.: 80 MHz)
-    T1CON = 0;           // Para Timer1
-    T1CONbits.TCKPS = 3; // Prescaler 1:256
 
-    // PBCLK = 12 MHz → T1 tick = 12MHz/256 = 312.500 Hz
-    // 1 ms = 312.5 contagens
-    PR1 = 312;           // ~1 ms
-    T1CONbits.ON = 1;
-
-    for (unsigned int i = 0; i < ms; i++)
-    {
-        TMR1 = 0;
-        while (!IFS0bits.T1IF); // Espera overflow
-        IFS0bits.T1IF = 0;      // Limpa flag
-    }
-}
-```
 
 
 
