@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
 
 jobs:
   sync:
@@ -24,4 +23,4 @@ jobs:
         run: |
           git remote add rt-embarcados git@github.com:rt-embarcados/grp1_repo.git
           git fetch rt-embarcados
-          git push rt-embarcados develop:embarcado --force-with-lease
+          git push rt-embarcados main:embarcado --force-with-lease
