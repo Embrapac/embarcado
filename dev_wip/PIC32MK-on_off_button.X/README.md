@@ -1,120 +1,108 @@
-#### Para dúvidas, comentários ou sugestões fiquem à vontade, estarei à disposição através de minha página: 
+#### Para dúvidas, comentários ou sugestões, fique à vontade para entrar em contato através da minha página:
 
 [Matheus Grossi](https://www.linkedin.com/in/matheus-grossi/)
 
-# Projeto de Controle de Estados com Botões - PIC32MK
+# Controle básico de saídas com botões - PIC32MK
 
 ## Descrição
-Este projeto é um exemplo prático de inicialização, configuração de hardware e controle de estados em um microcontrolador da família PIC32MK. O firmware implementa uma lógica de operação com três estados principais: **desligado**, **ligado** e **emergência**, utilizando botões físicos e sinalização visual por LEDs.
+Este projeto implementa um firmware simples para o **PIC32MK0128MCA048**, desenvolvido com o compilador **XC32**, para controle direto de dois LEDs a partir de dois botões físicos.
 
-O sistema foi desenvolvido com o compilador **XC32** e utiliza uma abordagem baseada em **máquina de estados**, permitindo controle consistente do comportamento do circuito através dos botões de **liga/desliga** e **emergência**.
+O projeto está organizado em três arquivos principais:
+
+- **`defs.h`**: define a frequência de clock do sistema, declara `delay_ms()` e concentra os *Configuration Bits*.
+- **`delay.c`**: implementa a rotina de atraso em milissegundos com base no **Core Timer**.
+- **`main.c`**: realiza a configuração dos pinos e contém a lógica principal de operação.
 
 **Autor:** Matheus Grossi  
-**Data:** 13 de Fevereiro de 2026
+**Base do código:** 13 de Fevereiro de 2026
 
-## Hardware Alvo
-* **Microcontrolador:** PIC32MK0128MCA048
-* **Botão de Liga/Desliga:** RB1
-* **Botão de Emergência:** RB2
-* **LED Verde:** RB10
-* **LED Vermelho:** RB13
-* **LED Amarelo:** RB4
-* **Frequência de Clock de Sistema (`SYSCLK`):** 12 MHz (12000000 Hz)
+## Hardware alvo
+- **Microcontrolador:** PIC32MK0128MCA048
+- **Botão em RB1**
+- **Botão em RB2**
+- **LED verde em RB10**
+- **LED vermelho em RB13**
+- **Clock de sistema (`SYSCLK_HZ`):** 12 MHz
 
-## Lógica de Operação do Sistema
+## Mapeamento atual de pinos
 
-O firmware trabalha com três estados distintos:
+| Sinal | Pino | Direção | Observação |
+| :--- | :---: | :---: | :--- |
+| Botão 1 | RB1 | Entrada | Leitura por `PORTBbits.RB1` |
+| Botão 2 | RB2 | Entrada | Leitura por `PORTBbits.RB2` |
+| LED verde | RB10 | Saída | Controle por `LATBbits.LATB10` |
+| LED vermelho | RB13 | Saída | Controle por `LATBbits.LATB13` |
 
-### 1. Estado Desligado
-Neste estado, o sistema permanece inativo e a sinalização visual indica condição de repouso.
+## Comportamento atual do firmware
+O firmware inicializa o hardware, desabilita o **JTAG** em tempo de execução e configura:
 
-* **LED verde:** apagado
-* **LED vermelho:** aceso
-* **LED amarelo:** apagado
+- **RB1** e **RB2** como entradas digitais;
+- **RB10** e **RB13** como saídas digitais;
+- **RB1** e **RB2** com modo analógico desabilitado;
+- estado inicial com **LED verde apagado** e **LED vermelho aceso**.
 
-Ao pressionar o botão de **liga/desliga**, o sistema passa para o estado **ligado**.
+Após a inicialização, o programa executa continuamente a função `operation()` dentro do laço principal.
 
-### 2. Estado Ligado
-Neste estado, o sistema entra em operação normal.
+### Ação de cada botão
+A lógica implementada hoje é a seguinte:
 
-* **LED verde:** aceso
-* **LED vermelho:** apagado
-* **LED amarelo:** apagado
+- se **RB2** estiver em nível lógico alto, a função `mode_off()` é executada;
+- caso contrário, se **RB1** estiver em nível lógico alto, a função `mode_on()` é executada.
 
-Ao pressionar novamente o botão de **liga/desliga**, o sistema retorna ao estado **desligado**.
+### Efeito visual das rotinas
 
-### 3. Estado de Emergência
-O estado de emergência só pode ser acionado se o sistema já estiver previamente no estado **ligado**.
+| Rotina | Condição de entrada | LED verde (RB10) | LED vermelho (RB13) |
+| :--- | :--- | :---: | :---: |
+| `mode_off()` | `RB2 = 1` | Apagado | Aceso |
+| `mode_on()` | `RB1 = 1` | Aceso | Apagado |
+| Inicialização | após `init()` | Apagado | Aceso |
 
-Quando o botão de **emergência** é pressionado:
+### Circuito em operação:
 
-* a operação normal é interrompida;
-* o **LED vermelho** permanece aceso;
-* o **LED amarelo** passa a piscar;
-* o sistema permanece travado em emergência até que o botão de **liga/desliga** seja pressionado novamente.
+| **Ação** |
+| :--- |
+| Desligado |
+|![Desligado](https://github.com/Embrapac/embarcado/blob/button_device/dev_wip/PIC32MK-on_off_button.X/images/mode_off.png)|
+| Ligado |
+|![Ligado](https://github.com/Embrapac/embarcado/blob/button_device/dev_wip/PIC32MK-on_off_button.X/images/mode_on.png)|
 
-Ao pressionar o botão de **liga/desliga** durante a emergência, o sistema reinicia e retorna ao estado **ligado**.
+## Fluxo de operação
+1. O microcontrolador inicia com os pinos configurados.
+2. O LED vermelho permanece ligado por padrão.
+3. Ao pressionar o botão ligado a **RB2**, o sistema coloca a saída no padrão de `mode_off()`.
+4. Ao pressionar o botão ligado a **RB1**, o sistema coloca a saída no padrão de `mode_on()`.
+5. Quando nenhum botão está pressionado, o firmware não altera as saídas, mantendo o último estado aplicado.
 
-## Comportamento dos Botões
+## Estrutura do software
 
-O projeto considera botões com lógica de acionamento por **pull-down** em bancada, ou seja:
+### `defs.h`
+Este arquivo centraliza definições globais do projeto:
 
-* **nível lógico 0**: botão solto
-* **nível lógico 1**: botão pressionado
+- `#define SYSCLK_HZ 12000000UL`
+- declaração da função `delay_ms(uint32_t ms);`
+- *Configuration Bits* protegidos pela macro `_CONFIG_BITS_SOURCE`
 
-A leitura dos botões é feita por **detecção de borda de subida**, evitando múltiplos acionamentos indevidos enquanto o botão permanece pressionado. Além disso, foi incorporado um pequeno tratamento de **debounce por software** para maior estabilidade na leitura.
+Isso permite manter a configuração do dispositivo em um único local e evitar repetição entre arquivos do projeto.
 
-## Estrutura do Projeto
+### `delay.c`
+A função `delay_ms()` utiliza o registrador `_CP0_GET_COUNT()` do núcleo MIPS. Como o contador incrementa tipicamente em **`SYSCLK / 2`**, o código converte o tempo solicitado em *ticks* e aguarda até o tempo expirar.
 
-O projeto foi organizado de forma objetiva e funcional, mantendo os elementos centrais separados conforme sua responsabilidade:
+Essa abordagem é suficiente para atrasos curtos por software em aplicações simples.
 
-* **`defs.h`**: Centraliza os *Configuration Bits* (`#pragma config`), a frequência de clock do sistema e o protótipo da função de atraso.
-* **`delay.c`**: Implementa a função `delay_ms`, utilizada para temporizações por software com base no Core Timer.
-* **`main.c`**: Contém a configuração dos pinos, a definição da máquina de estados, as rotinas de operação e a lógica principal do sistema.
+### `main.c`
+O arquivo principal contém:
 
-## Detalhes de Implementação
+- os mapeamentos simbólicos dos botões e LEDs por macros;
+- a rotina `init()` para configuração de hardware;
+- as rotinas `mode_off()` e `mode_on()`;
+- a rotina `operation()`, responsável pela leitura dos botões;
+- o laço principal infinito em `main()`.
 
-### Função de Atraso Exata (`delay_ms`)
-A função de atraso utiliza o **Core Timer** do núcleo MIPS (Coprocessador 0). O registrador `_CP0_GET_COUNT()` incrementa tipicamente a uma taxa de `SYSCLK / 2`. A partir disso, a função calcula a quantidade de *ticks* necessária para representar o tempo em milissegundos desejado, permitindo atrasos por software com boa precisão.
-
-### Inicialização e Configuração
-Durante a inicialização, são realizadas as seguintes etapas:
-
-* desativação do **JTAG** em tempo de execução;
-* configuração de **RB1** e **RB2** como entradas digitais;
-* configuração de **RB4**, **RB10** e **RB13** como saídas digitais;
-* inicialização do sistema no estado **desligado**.
-
-### Máquina de Estados
-A lógica principal foi implementada com três estados:
-
-* `STATE_OFF`
-* `STATE_ON`
-* `STATE_EMERGENCY`
-
-Essa abordagem permite tratar de forma clara e escalável o comportamento do sistema, facilitando futuras expansões, como inserção de novos modos de operação, temporizações adicionais ou tratamento por interrupções.
-
-### Tratamento do Modo de Emergência
-O modo de emergência foi implementado de forma a não depender apenas do nível lógico momentâneo do botão. Uma vez acionado, o estado é mantido internamente pelo firmware até que o botão de **liga/desliga** seja novamente pressionado, caracterizando um comportamento de travamento controlado do sistema.
-
-## Tabela de Estados Observados em Bancada
-
-<div align="center">
-
-| **Estado do Sistema** | **LED Verde** | **LED Vermelho** | **LED Amarelo** |
-| :--- | :---: | :---: | :---: |
-| Desligado | Apagado | Aceso | Apagado |
-| Ligado | Aceso | Apagado | Apagado |
-| Emergência | Apagado | Aceso | Piscando |
-
-</div>
-
-## Como Utilizar e Compilar
-
-1. Crie um novo projeto no **MPLAB X IDE**.
-2. Adicione os arquivos `main.c` e `delay.c` à pasta *Source Files*.
-3. Adicione o arquivo `defs.h` à pasta *Header Files*.
-4. Certifique-se de que o compilador **Microchip XC32** está selecionado nas propriedades do projeto.
-5. A macro `_CONFIG_BITS_SOURCE` deve permanecer definida no topo do `main.c` para que as configurações presentes em `defs.h` sejam aplicadas corretamente.
+## Compilação e uso
+1. Crie um projeto para o **PIC32MK0128MCA048** no **MPLAB X IDE**.
+2. Adicione `main.c` e `delay.c` em **Source Files**.
+3. Adicione `defs.h` em **Header Files**.
+4. Certifique-se de selecionar o compilador **XC32**.
+5. Mantenha `#define _CONFIG_BITS_SOURCE` no topo de `main.c`, para que os *Configuration Bits* definidos em `defs.h` sejam compilados neste arquivo.
 6. Compile o projeto e grave o firmware no microcontrolador.
-7. Conecte os botões e LEDs conforme os pinos definidos e valide os estados em bancada.
+7. Conecte os botões e LEDs conforme o mapeamento documentado acima.
