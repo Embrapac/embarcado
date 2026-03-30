@@ -1,7 +1,15 @@
 #ifndef DEFS_H
 #define DEFS_H
 
+#include <xc.h>
+#include <stdint.h>
+
+#define SYSCLK_HZ 12000000UL
+
+// Colocar config bits APENAS quando _CONFIG_BITS_SOURCE estiver definido
 #ifdef _CONFIG_BITS_SOURCE
+
+// PIC32MK0128MCA048 Configuration Bit Settings
 
 // DEVCFG3
 #pragma config USERID   = 0xFFFF
@@ -61,34 +69,8 @@
 #pragma config TSEQ = 0xFFFF
 #pragma config CSEQ = 0xFFFF
 
-#endif /* _CONFIG_BITS_SOURCE */
+#endif // _CONFIG_BITS_SOURCE
 
-#include <xc.h>
-#include <sys/attribs.h>
-#include <stdint.h>
+void delay_ms(uint32_t ms);
 
-#define ADC_REFERENCE_VOLTAGE   3.3f
-#define ADC_MAX_COUNTS          4095.0f
-
-#define DIST_POLY_A             1.720473f
-#define DIST_POLY_B             4.15228f
-#define DIST_POLY_C            -59.8489f
-#define DIST_POLY_D             117.313f
-
-#define DIST_MIN_VALID_CM       10.0f
-#define DIST_MAX_VALID_CM       80.0f
-
-/*
- * Debounce por integrador no ISR do Timer2 (tick = 10 ms).
- * 5 ticks = 50 ms de sinal estavel para confirmar um pressionamento.
- */
-#define BTN_DEBOUNCE_COUNT      5u
-
-/* Flags de evento setadas pelo ISR, lidas e zeradas pelo main(). */
-extern volatile uint8_t g_btn_on_event;
-extern volatile uint8_t g_btn_off_event;
-
-void init_OSC(void);
-void init_TMR2(void);
-
-#endif /* DEFS_H */
+#endif // DEFS_H
