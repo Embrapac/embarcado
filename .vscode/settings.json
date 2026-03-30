@@ -56,8 +56,6 @@
   "C_Cpp_Runner.showCompilationTime": false,
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
-  "mplab.clangd.arguments": [
-    "--compile-commands-dir=${workspaceFolder}/_build/embrapac/default"
-  ],
-  "mplab.clangd.path": "/opt/microchip/xc32/v5.00/bin/xc32-clangd"
+  "mplab.clangd.path": "/opt/microchip/xc32/v5.00/bin/xc32-clangd",
+  "mplab.clangd.compileCommandsDir": "${workspaceFolder}/_build/embrapac/default"
 }
