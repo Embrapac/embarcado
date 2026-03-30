@@ -17,7 +17,6 @@
 
 #define led_verd_state LATBbits.LATB10
 #define led_verm_state LATBbits.LATB13
-//#define led_amar_state LATBbits.LATB13
 
 int state = 0;
 
@@ -43,20 +42,14 @@ int init(void){
 
 int mode_off(void){
     delay_ms(50);
-    led_verd_state = 1;
-    led_verm_state = 0;
+    led_verd_state = 0;
+    led_verm_state = 1;
 }
 
 int mode_on(void){
     delay_ms(50);
-    led_verd_state = 0;
-    led_verm_state = 1;
-}
-
-int mode_sos(void){
-    delay_ms(50);
-    led_verd_state = 0;
-    led_verm_state = 1;
+    led_verd_state = 1;
+    led_verm_state = 0;
 }
 
 int operation(void){
