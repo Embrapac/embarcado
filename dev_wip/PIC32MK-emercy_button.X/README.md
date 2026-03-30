@@ -28,9 +28,14 @@ O firmware trabalha com três estados distintos:
 ### 1. Estado Desligado
 Neste estado, o sistema permanece inativo e a sinalização visual indica condição de repouso.
 
-* **LED verde:** apagado
-* **LED vermelho:** aceso
-* **LED amarelo:** apagado
+| **Ação** |
+| :--- |
+| Estado desligado |
+|![Estado desligado](https://github.com/MattGrossi12/hello_world_pic32/blob/main/blink_state_0.jpeg)|
+| Estado ligado |
+|![Estado ligado](https://github.com/MattGrossi12/hello_world_pic32/blob/main/blink_state_1.jpeg)|
+|![Estado ligado](https://github.com/MattGrossi12/hello_world_pic32/blob/main/blink_state_1.jpeg)|
+
 
 Ao pressionar o botão de **liga/desliga**, o sistema passa para o estado **ligado**.
 
