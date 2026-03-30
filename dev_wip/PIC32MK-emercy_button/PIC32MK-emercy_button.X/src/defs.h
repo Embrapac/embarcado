@@ -71,6 +71,13 @@
 
 #endif // _CONFIG_BITS_SOURCE
 
+typedef enum
+{
+    STATE_OFF = 0,
+    STATE_ON = 1,
+    STATE_EMERGENCY = 2
+} system_state_t;
+
 void delay_ms(uint32_t ms);
 
 #endif // DEFS_H
