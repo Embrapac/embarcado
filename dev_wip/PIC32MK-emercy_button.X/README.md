@@ -30,11 +30,12 @@ Neste estado, o sistema permanece inativo e a sinalização visual indica condi�
 
 | **Ação** |
 | :--- |
-| Estado desligado |
-|![Estado desligado](https://github.com/MattGrossi12/hello_world_pic32/blob/main/blink_state_0.jpeg)|
-| Estado ligado |
-|![Estado ligado](https://github.com/MattGrossi12/hello_world_pic32/blob/main/blink_state_1.jpeg)|
-|![Estado ligado](https://github.com/MattGrossi12/hello_world_pic32/blob/main/blink_state_1.jpeg)|
+| Desligado |
+|![Desligado](https://github.com/Embrapac/embarcado/blob/button_device/dev_wip/PIC32MK-emercy_button.X/images/mode_off.png)|
+| Ligado |
+|![Ligado](https://github.com/Embrapac/embarcado/blob/button_device/dev_wip/PIC32MK-emercy_button.X/images/mode_on.png)|
+| Emergência |
+|![Emergência](https://github.com/Embrapac/embarcado/blob/button_device/dev_wip/PIC32MK-emercy_button.X/images/mode_sos.png)|
 
 
 Ao pressionar o botão de **liga/desliga**, o sistema passa para o estado **ligado**.
