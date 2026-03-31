@@ -1,38 +1,48 @@
 #include "pins.h"
+#include "adc_1.h"
+
+#include "on_off_button.h"
 #include "out_control.h"
 
-void Pins_Init(void)
+void init(void)
 {
-    /*
-     * AN0 no MCA048 está em RA0 — mantido analógico.
-     * Todos os demais pinos do banco iniciam como digital.
-     */
+    CFGCONbits.JTAGEN = 0;
+
+    /* Inicializa todos os pinos como digitais */
     ANSELA = 0x0000;
     ANSELB = 0x0000;
     ANSELC = 0x0000;
     ANSELD = 0x0000;
 
-    /* AN0 / RA0 — entrada analógica para o sensor de distância */
+    /* AN0 no MCA048 está em RA0 */
     ANSELAbits.ANSA0 = 1;
     TRISAbits.TRISA0 = 1;
 
-    /* LEDs de sinalização de distância — saídas digitais */
+    /* Entradas */
+    TRISBbits.TRISB1 = 1;
+    TRISBbits.TRISB2 = 1;
+
+    /* Saídas do primeiro conjunto */
+    TRISBbits.TRISB4  = 0;
+    TRISBbits.TRISB10 = 0;
+    TRISBbits.TRISB13 = 0;
+
+    /* Saídas do segundo conjunto */
     RLED_DIR = 0;
     GLED_DIR = 0;
     YLED_DIR = 0;
+
+    /* Garantia explícita de entradas digitais */
+    ANSELBbits.ANSB1 = 0;
+    ANSELBbits.ANSB2 = 0;
+
+    on_off_button_init();
     LEDs_ClearAll();
 
-    /*
-     * RB11 — botão de ligar (ativo-alto, sem pull-up interno).
-     * O botão conecta o pino ao GND em repouso e a VCC ao pressionar.
-     */
-    PWR_BTN_DIR = 1;
-    /* PWR_BTN_CNPU = 1 — NÃO habilitar: botão tem GND fixo em repouso */
+    init_OSC();
+    init_TMR2();
+    init_ADC();
 
-    /* RB4 — botão de desligar (mesmo padrão de hardware, ativo-alto) */
-    OFF_BTN_DIR = 1;
-
-    /* RB10 — LED de status do sistema, saída digital, apagado inicialmente */
-    PWR_LED_DIR = 0;
-    PWR_LED     = 0;
+    INTCONSET = _INTCON_MVEC_MASK;
+    __builtin_enable_interrupts();
 }

@@ -4,9 +4,9 @@
 void Pins_Init(void)
 {
     /*
-     * AN0 no MCA048 est· em RA0.
-     * RA1 fica reservado para o LED amarelo externo.
-     * RB1 e RB11 ser„o usados como botıes digitais.
+     * AN0 no MCA048 est√° em RA0.
+     * LEDs externos: RB12 (verde), RB9 (vermelho) e RB3 (amarelo).
+     * RB1 e RB11 ser√£o usados como bot√µes digitais.
      */
     ANSELA = 0x0000;
     ANSELB = 0x0000;
@@ -16,8 +16,8 @@ void Pins_Init(void)
     ANSELAbits.ANSA0 = 1;
     TRISAbits.TRISA0 = 1;
 
-    START_BUTTON_DIR = 1;
-    EMERGENCY_BUTTON_DIR = 1;
+    //START_BUTTON_DIR = 1;
+    //EMERGENCY_BUTTON_DIR = 1;
 
     CNPUBbits.CNPUB1 = 1;
     CNPUBbits.CNPUB11 = 1;

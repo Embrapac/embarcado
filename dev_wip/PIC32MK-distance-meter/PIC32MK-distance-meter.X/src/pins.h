@@ -3,48 +3,37 @@
 
 #include "defs.h"
 
-/* ---- LEDs de sinalização de distância ----------------------------------- */
-#define RLED            LATBbits.LATB13
-#define RLED_DIR        TRISBbits.TRISB13
+/* -------------------------- Entradas / botoes -------------------------- */
+#define BT_LIG             PORTBbits.RB1
+#define BT_EME             PORTBbits.RB2
 
-#define GLED            LATBbits.LATB15
-#define GLED_DIR        TRISBbits.TRISB15
+/* ----------------------- LEDs do primeiro conjunto --------------------- */
+#define LED_ON             LATBbits.LATB10
+#define LED_OFF            LATBbits.LATB13
+#define LED_EMERGENCY      LATBbits.LATB4
 
-#define YLED            LATAbits.LATA1
-#define YLED_DIR        TRISAbits.TRISA1
+/* ----------------------- LEDs do segundo conjunto ---------------------- */
+#define RLED               LATBbits.LATB9
+#define RLED_DIR           TRISBbits.TRISB9
 
-/*
- * Botão de liga/desliga — RB11
+#define GLED               LATBbits.LATB12
+#define GLED_DIR           TRISBbits.TRISB12
+
+#define YLED               LATBbits.LATB3
+#define YLED_DIR           TRISBbits.TRISB3
+
+/**
+ * @brief Inicializa todos os GPIOs consolidados dos dois arquivos.
  *
- * POLARIDADE: defina conforme a sua ligação de hardware.
- *
- *   Ativo-baixo (padrão): botão conecta RB11 ao GND → pull-up interno ativo.
- *     BTN_PRESSED_LEVEL  0u
- *     PWR_BTN_CNPU       habilitado em Pins_Init()
- *
- *   Ativo-alto: botão conecta RB11 a VDD → sem pull-up interno.
- *     Altere BTN_PRESSED_LEVEL para 1u e comente a linha do CNPU.
+ * - Desabilita JTAG.
+ * - Configura RB1 e RB2 como entradas digitais.
+ * - Configura RB4, RB10 e RB13 como saídas.
+ * - Configura RB3, RB9 e RB12 como saídas.
+ * - Mantém AN0 em RA0 como entrada analógica.
+ * - Inicializa o módulo do botão liga/desliga.
+ * - Limpa os LEDs externos.
  */
-#define BTN_PRESSED_LEVEL   1u          /* ativo-alto: RB11 vai a VCC ao pressionar */
 
-#define PWR_BTN             PORTBbits.RB11
-#define PWR_BTN_DIR         TRISBbits.TRISB11
-#define PWR_BTN_CNPU        CNPUBbits.CNPUB11
+void init(void);
 
-/*
- * Botão de desligar — RB4 (ativo-alto, mesmo padrão de hardware do PWR_BTN)
- * Pressionar desliga o sistema incondicionalmente.
- */
-#define OFF_BTN             PORTBbits.RB4
-#define OFF_BTN_DIR         TRISBbits.TRISB4
-
-/*
- * LED de status do sistema — RB10
- * Aceso enquanto o sistema de medição estiver ativo.
- */
-#define PWR_LED             LATBbits.LATB10
-#define PWR_LED_DIR         TRISBbits.TRISB10
-
-void Pins_Init(void);
-
-#endif /* PINS_H */
+#endif // PINS_H
