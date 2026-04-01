@@ -15,5 +15,8 @@ extern volatile uint8_t g_voltage_zone;
 
 void init_ADC(void);
 void analog_process_sample(void);
+void analog_measurement_enable(void);
+void analog_measurement_disable(void);
+uint8_t analog_measurement_is_enabled(void);
 
 #endif /* ADC_1_H */

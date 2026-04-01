@@ -43,6 +43,9 @@ void init(void)
     init_TMR2();
     init_ADC();
 
+    /* Sistema de medição inicia desabilitado */
+    T2CONbits.ON = 0;
+
     INTCONSET = _INTCON_MVEC_MASK;
     __builtin_enable_interrupts();
 }

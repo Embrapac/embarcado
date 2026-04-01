@@ -8,6 +8,8 @@ volatile float g_adc_voltage = 0.0f;
 volatile float g_distance_cm = 0.0f;
 volatile uint8_t g_voltage_zone = 0u;
 
+static volatile uint8_t g_measurement_enabled = 0u;
+
 void init_ADC(void)
 {
     ADCCON1bits.ON = 0;
@@ -58,6 +60,31 @@ void init_ADC(void)
 
     IFS2bits.AD1IF = 0;
     IEC2bits.AD1IE = 0;
+
+    g_measurement_enabled = 0u;
+}
+
+void analog_measurement_enable(void)
+{
+    g_measurement_enabled = 1u;
+    g_adc0_new_sample = 0u;
+    T2CONbits.ON = 1;
+}
+
+void analog_measurement_disable(void)
+{
+    g_measurement_enabled = 0u;
+    T2CONbits.ON = 0;
+    g_adc0_new_sample = 0u;
+    g_voltage_zone = 0u;
+    g_adc_voltage = 0.0f;
+    g_distance_cm = 0.0f;
+    LEDs_ClearAll();
+}
+
+uint8_t analog_measurement_is_enabled(void)
+{
+    return g_measurement_enabled;
 }
 
 void analog_process_sample(void)
@@ -86,4 +113,3 @@ void analog_process_sample(void)
 
     Output_UpdateFromVoltage(g_adc_voltage);
 }
-

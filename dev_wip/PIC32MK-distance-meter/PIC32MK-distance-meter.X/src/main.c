@@ -13,7 +13,8 @@ int main(void)
     {
         operation();
 
-        if (g_adc0_new_sample != 0u)
+        if ((analog_measurement_is_enabled() != 0u) &&
+            (g_adc0_new_sample != 0u))
         {
             g_adc0_new_sample = 0u;
             analog_process_sample();
