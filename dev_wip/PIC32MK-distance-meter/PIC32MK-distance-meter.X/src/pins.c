@@ -23,9 +23,9 @@ void init(void)
     TRISBbits.TRISB2 = 1;
 
     /* Saídas do primeiro conjunto */
-    TRISBbits.TRISB4  = 0;
-    TRISBbits.TRISB10 = 0;
-    TRISBbits.TRISB13 = 0;
+    TRISCbits.TRISC11  = 0;
+    TRISAbits.TRISA11 = 0;
+    TRISAbits.TRISA12 = 0;
 
     /* Saídas do segundo conjunto */
     RLED_DIR = 0;
