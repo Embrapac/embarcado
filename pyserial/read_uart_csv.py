@@ -3,7 +3,7 @@ import csv
 import time
 import serial
 
-PORTA = "/dev/ttyACM0"  # ajuste se necessário
+PORTA = "/dev/ttyUSB0"  # ajuste se necessário
 BAUD = 115200
 ARQUIVO_CSV = "uart_capture.csv"
 
