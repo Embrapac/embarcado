@@ -1,4 +1,4 @@
-#!/home/matheus/Documentos/embarcado/embarcado/pyserial/.venv/bin/python
+#!/home/embrapac/pyserial/.venv/bin/python
 import sys
 from serial.tools.miniterm import main
 if __name__ == '__main__':

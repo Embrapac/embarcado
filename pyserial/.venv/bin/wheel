@@ -1,4 +1,4 @@
-#!/home/matheus/Documentos/embarcado/embarcado/pyserial/.venv/bin/python
+#!/home/embrapac/pyserial/.venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
