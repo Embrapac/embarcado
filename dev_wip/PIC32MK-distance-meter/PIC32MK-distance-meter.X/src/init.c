@@ -1,36 +1,31 @@
 #include "defs.h"
-
 #include "init.h"
-
-#define CPU_FREQ_HZ        4000000UL   /* Ajuste para o clock real da CPU */
-#define CORE_TIMER_HZ      (CPU_FREQ_HZ / 2UL)
+#include "uart.h"
 
 void init_OSC(void)
 {
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
-
-    /* PBCLK2 = SYSCLK / 1 */
-    PB2DIVbits.PBDIV = 0;
-
-    SYSKEY = 0x33333333;
+    /*
+     * O projeto consolidado usa a mesma base de clock definida em defs.h.
+     * A UART e o timer de amostragem compartilham essa referencia.
+     */
 }
 
 void init_TMR2(void)
 {
-    PR2 = 250000u - 16u;
+    const uint32_t pr_value =
+        ((PBCLK_HZ / TMR2_PRESCALE_VALUE) * MEASUREMENT_PERIOD_MS / 1000UL) - 1UL;
 
     T2CONbits.ON = 0;
-    T2CONbits.TCKPS = 4;
+    T2CONbits.TCKPS = TMR2_PRESCALE_BITS;
     T2CONbits.TCS = 0;
-    T2CONbits.T32 = 1;
+    T2CONbits.T32 = 0;
+
+    TMR2 = 0u;
+    PR2 = (uint16_t)pr_value;
 
     IPC2bits.T2IP = 1;
     IFS0bits.T2IF = 0;
     IEC0bits.T2IE = 1;
-
-    T2CONbits.ON = 1;
 }
 
 void delay_ms(uint32_t ms)
@@ -39,10 +34,12 @@ void delay_ms(uint32_t ms)
 
     while (ms-- != 0u)
     {
-        _CP0_SET_COUNT(0);
+        const uint32_t start = (uint32_t)_CP0_GET_COUNT();
 
-        while (_CP0_GET_COUNT() < ticks_per_ms)
+        while (((uint32_t)_CP0_GET_COUNT() - start) < ticks_per_ms)
         {
         }
+
+        uart1_led_service_1ms();
     }
 }

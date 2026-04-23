@@ -22,18 +22,13 @@
 #define YLED               LATBbits.LATB3
 #define YLED_DIR           TRISBbits.TRISB3
 
-/**
- * @brief Inicializa todos os GPIOs consolidados dos dois arquivos.
- *
- * - Desabilita JTAG.
- * - Configura RB1 e RB2 como entradas digitais.
- * - Configura RC11, RA11 e RA12 como saídas.
- * - Configura RB3, RB9 e RB12 como saídas.
- * - Mantém AN0 em RA0 como entrada analógica.
- * - Inicializa o módulo do botão liga/desliga.
- * - Limpa os LEDs externos.
- */
+/* -------------------------- LEDs reais da UART ------------------------- */
+#define UART_TX_LED        LATCbits.LATC2
+#define UART_TX_LED_DIR    TRISCbits.TRISC2
+
+#define UART_RX_LED        LATAbits.LATA8
+#define UART_RX_LED_DIR    TRISAbits.TRISA8
 
 void init(void);
 
-#endif // PINS_H
+#endif /* PINS_H */

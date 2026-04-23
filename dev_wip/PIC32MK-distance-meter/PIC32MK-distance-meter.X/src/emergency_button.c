@@ -7,10 +7,12 @@ uint8_t emergency_button_check_activation(system_state_t current_state,
                                           int bt_eme_now,
                                           int *bt_eme_prev)
 {
-    if ((current_state == STATE_ON) && (bt_eme_now == 1) && (*bt_eme_prev == 0)) {
+    if ((current_state == STATE_ON) && (bt_eme_now == 1) && (*bt_eme_prev == 0))
+    {
         delay_ms(20);
 
-        if (BT_EME == 1) {
+        if (BT_EME == 1)
+        {
             *bt_eme_prev = bt_eme_now;
             return 1U;
         }
@@ -24,11 +26,12 @@ uint8_t emergency_button_handle(system_state_t *current_state,
                                 int bt_lig_now,
                                 int *bt_lig_prev)
 {
-    /* Em emergência, só o botão de ligar reinicia o sistema */
-    if ((bt_lig_now == 1) && (*bt_lig_prev == 0)) {
+    if ((bt_lig_now == 1) && (*bt_lig_prev == 0))
+    {
         delay_ms(20);
 
-        if (BT_LIG == 1) {
+        if (BT_LIG == 1)
+        {
             *current_state = STATE_ON;
             mode_on();
 
@@ -45,7 +48,7 @@ uint8_t emergency_button_handle(system_state_t *current_state,
 
 void mode_sos_step(void)
 {
-    static uint8_t emergency_blink = 0;
+    static uint8_t emergency_blink = 0u;
 
     LED_ON = 0;
     LED_OFF = 1;
