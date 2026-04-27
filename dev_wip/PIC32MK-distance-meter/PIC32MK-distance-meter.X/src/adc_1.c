@@ -100,13 +100,12 @@ void analog_process_sample(void)
         DIST_POLY_D;
 
     /*
-     * Fora da faixa válida de medição do sensor:
-     * todas as saídas devem permanecer desligadas.
+     * Fora da faixa valida de medicao do sensor:
+     * todas as saidas devem permanecer desligadas.
      */
     if ((g_distance_cm < DIST_MIN_VALID_CM) ||
         (g_distance_cm > DIST_MAX_VALID_CM))
     {
-        g_voltage_zone = 0u;
         LEDs_ClearAll();
         return;
     }
